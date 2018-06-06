@@ -149,54 +149,38 @@ namespace WpfApp2
         private int CalculateScore()
         {
             int score = 0;
-            for (int i = 0; i < Size; i++)
+            for (int i = 0; i < Size - 1; i++)
                 for (int j = 0; j < Size - 1; j++)
                 {
-                    if (!Cells[i,j].IsDefaultColor() && Cells[i,j].Color == Cells[i, j + 1].Color)
-                    {
+                    //if (!Cells[i,j].IsDefaultColor() && Cells[i,j].Color == Cells[i, j + 1].Color)
+                    //{
+                    if (!Cells[i,j].IsDefaultColor())
                         score += CheckSquare(i, j);
-                    }
+                    //}
                 }
             return score;
         }
         private int CheckSquare(int i_pos, int j_pos)
         {
-            int rank = 2;
-            int i_rank_max = 1;
-            int j = j_pos + 1;
-            int i = i_pos;
-            while(j + 1 < Size)
+            int rank = 1;
+            
+            for (int i = 1; i < Size - i_pos && i < Size - j_pos; i++)
             {
-                if (Cells[i_pos, j].Color == Cells[i_pos, j + 1].Color)
-                    rank++;
-                j++;
-            }
-
-            while (++i < Size)
-                i_rank_max++;
-
-            j = i_rank_max < rank ? j - (rank - i_rank_max) : j;
-            rank = i_rank_max < rank ? i_rank_max : rank;
-
-            for (; j >= j_pos;)
-            {
-                for (int itemp = i_pos; itemp < rank + i_pos && itemp < Size; itemp++)
+                if (Cells[i_pos + i, j_pos + i].Color.Equals(Cells[i_pos, j_pos].Color) && /*Cells[i_pos + i, j_pos + i].Color != Cell.Defaultcolor &*/
+                    Cells[i_pos + i, j_pos    ].Color.Equals(Cells[i_pos, j_pos].Color) && /*Cells[i_pos + i, j_pos    ].Color != Cell.Defaultcolor &*/
+                    Cells[i_pos    , j_pos + i].Color.Equals(Cells[i_pos, j_pos].Color) /* & Cells[i_pos    , j_pos + i].Color != Cell.Defaultcolor*/)
                 {
-                    if (Cells[itemp, j].Color != Cells[i_pos, j_pos].Color)
-                    {
-                        rank = j - j_pos + 1;
-                        break;
-                    }
+                    rank++;
+                    Cells[i_pos + i, j_pos + i].SetDefaultColor();
+                    Cells[i_pos + i, j_pos].SetDefaultColor();
+                    Cells[i_pos, j_pos + i].SetDefaultColor();
                 }
-                j = j <= rank - 1 + j_pos ? j - 1 : j_pos + rank - 1;
             }
 
             if (rank > 1)
-                for (int ti = i_pos; i < i_pos + rank; i++)
-                    for (int tj = j_pos; j < j_pos + rank; j++)
-                        Cells[ti, tj].SetColor(Color.FromRgb(128, 128, 128));
+                Cells[i_pos, j_pos].SetDefaultColor();
 
-            return rank > 1 ? (int)Math.Pow(10, rank) : 0;
+            return rank <= 1 ? 0 : (int)Math.Pow(10, rank - 1);
         }
 
     }

@@ -11,6 +11,7 @@ namespace WpfApp2.Classes
 {
     class Cell
     {
+        public static readonly Color Defaultcolor = Color.FromRgb(128, 128, 128);
         public Point Position // Left top point of the rectangle
         { get; set; }
 
@@ -19,7 +20,7 @@ namespace WpfApp2.Classes
         public Color Color { get; private set; }
         public Boolean IsLocked { get; private set; }
 
-        public readonly Color DefaultColor = Color.FromRgb(128, 128, 128);
+        private readonly Color DefaultColor = Defaultcolor;
 
         public Rectangle RectangleCell { get; }
         public Cell()
